@@ -2,6 +2,7 @@
 import pdfplumber
 import headerdatatocsv
 import linedatatocsv
+import config
 
 def data_extraction(input_file):
    with pdfplumber.open(input_file) as pdf:
@@ -13,8 +14,11 @@ def data_extraction(input_file):
           # separate each page's text with newline
           all_page_data = all_page_data + '\n' + single_page_data
        
+       #print(all_page_data)
+       # Read keyword to identified the table data
+       config.read_config()
        # get only header information from all page data
-       index = all_page_data.find("Line")
+       index = all_page_data.find(config.keyword_line)
        if index > 0:
           if headerdatatocsv.header_data_to_csv(all_page_data[0:index]):
              # Process line data

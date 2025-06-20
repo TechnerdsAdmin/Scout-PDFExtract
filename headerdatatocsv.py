@@ -1,18 +1,22 @@
 import os
 import config
 import csv
+import config
 
 def header_data_to_csv(header_data):
     
     lines = header_data.split('\n')
     if len(lines[4]) > 0:
-    
+        # Read keyword to identified the date
+        config.read_config()
+
         po_num = lines[4].strip()
-        index = header_data.find("DATE:")
+        index = header_data.find(config.keyword_date)
+        #print(index)
         if index > 0:
             order_date = header_data[index+6:index+6+10]
            
-        index = header_data.find("Ship To:")
+        index = header_data.find(config.keyword_ship)
         if index > 0:
             # Get Ship To address
             shipAddress = get_To_Address(lines[14].strip())
@@ -28,12 +32,12 @@ def header_data_to_csv(header_data):
             state = cityZip[1].strip().split(" ")
 
             # Get terms and Ship Via
-            index = header_data.find("TERMS:")
+            index = header_data.find(config.keyword_terms)
             if index > 0:
                 terms = header_data[index+7:index+7+20]
             else:
                 terms = ''
-            index = header_data.find("SHIP VIA:")
+            index = header_data.find(config.keyword_shipvia)
             if index > 0:
                 shipVia = header_data[index+10:index+10+20]
             else:
