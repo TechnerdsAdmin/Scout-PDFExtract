@@ -5,10 +5,14 @@ import linedatatocsv
 import config
 
 def data_extraction(input_file):
+
+   #total_lines = 0
    with pdfplumber.open(input_file) as pdf:
        # Read pdf data
        all_page_data = ''
        for pdf_page in pdf.pages:
+          #lines = pdf_page.extract_lines() 
+          #total_lines += len(lines)
           single_page_data = pdf_page.extract_text(layout=True)
           
           # separate each page's text with newline
