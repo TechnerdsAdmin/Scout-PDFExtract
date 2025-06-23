@@ -26,7 +26,7 @@ def data_extraction(input_file):
        if index > 0:
           if headerdatatocsv.header_data_to_csv(all_page_data[0:index]):
              # Process line data
-             if linedatatocsv.line_data_to_csv(all_page_data[index:]):
+             if linedatatocsv.line_data_to_csv(all_page_data[index:], input_file):
                 print("Completed...")
              else:
                 print("Input file is not a valid file")
