@@ -3,9 +3,11 @@ import pdfplumber
 import headerdatatocsv
 import linedatatocsv
 import config
+import log
 
 def data_extraction(input_file):
 
+   logger = log.logging.getLogger(__name__)
    #total_lines = 0
    with pdfplumber.open(input_file) as pdf:
        # Read pdf data
@@ -27,20 +29,14 @@ def data_extraction(input_file):
           if headerdatatocsv.header_data_to_csv(all_page_data[0:index]):
              # Process line data
              if linedatatocsv.line_data_to_csv(all_page_data[index:], input_file):
-                print("Completed...")
+                #print("Completed...")
+                logger.info("Process Completed ")
              else:
-                print("Input file is not a valid file")
+                logger.error("Total/PO keyword not found so halt the application")
+                #print("Input file is not a valid file")
        else:
-          print("Input file is not a valid file")
-       
-       #page = pdf.pages[0]
-       #text = page.extract_text()
-       #print(text)
-
-       # Extract the data
-       #tables = page.extract_table()
-       #for table in tables:
-        #  print(table)
+          logger.error("Total/PO keyword not found so halt the application")
+          #print("Input file is not a valid file")
          
 
     

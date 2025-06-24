@@ -2,6 +2,7 @@ import configparser
 import os
 
 def read_config():
+    import log
     config_file = "config.ini"
     config = configparser.ConfigParser()
     if os.path.exists(config_file):
@@ -39,7 +40,10 @@ def read_config():
         key_valid = config['VALIDATION']['key1']
         key_total = config['VALIDATION']['key2']        
     else:
-        print("Configuration file(config.ini) does not available.")
+        # Get a logger instance
+        logger = log.logging.getLogger(__name__)
+        logger.error("Configuration file(config.ini) does not available.")
+        #print("Configuration file(config.ini) does not available.")
 
 def is_valid(folder_name):
     if os.path.exists(folder_name):
@@ -49,7 +53,10 @@ def is_valid(folder_name):
         if len(folder_name) > 3:
             os.mkdir(folder_name)
         else:
-            print("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
+            import log
+            logger = log.logging.getLogger(__name__)
+            logger.error("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
+            #print("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
             return False
         
 

@@ -2,9 +2,11 @@ import os
 import config
 import csv
 import config
+import log
 
 def header_data_to_csv(header_data):
     
+    logger = log.logging.getLogger(__name__)
     lines = header_data.split('\n')
     if len(lines[4]) > 0:
         # Read keyword to identified the date
@@ -51,7 +53,8 @@ def header_data_to_csv(header_data):
             header_to_csv(header_data)
             return True
     else:
-        print("PO Number not found, Input file consider as a not a valid file")
+        #print("PO Number not found, Input file consider as a not a valid file")
+        logger.error("PO Number not found, Input file consider as a not a valid file")
         return False
 
 def get_To_Address(fromToAddress):
@@ -72,6 +75,7 @@ def get_To_Address(fromToAddress):
 
 def header_to_csv(header_data):
     
+    logger = log.logging.getLogger(__name__)
     # get output directory and output file name from config.ini
     config.read_config()
     if not config.output_dir:
@@ -79,11 +83,12 @@ def header_to_csv(header_data):
             writer = csv.writer(file)
             writer.writerows(header_data)
         print("\nOrder header CSV file " + config.output_header_csv + " created successfully.\n")
+        logger.info("Order header CSV file " + config.output_header_csv + " created successfully.")
     else:
         with open(config.output_dir + "\\" + config.output_header_csv, 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerows(header_data)
         print("\nOrder header CSV file " + config.output_dir + "\\" + config.output_header_csv + " created successfully.\n")
-    
+        logger.info("Order header CSV file " + config.output_dir + "\\" + config.output_header_csv + " created successfully.")
     
     
