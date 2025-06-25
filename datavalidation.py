@@ -20,7 +20,7 @@ def validation_reconciliation(total_po, line_count_po):
             #print(row_count - 1)
     
     # Total validation
-    total_csv = calculate_column_sum_csv(file_path, 7)
+    total_csv = calculate_column_sum_csv(file_path, 6)
     #print(total_po)
     #print(total_csv)
     if float(total_po) == total_csv and line_count_po == row_count -1:

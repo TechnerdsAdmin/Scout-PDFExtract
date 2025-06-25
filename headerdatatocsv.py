@@ -1,4 +1,4 @@
-import os
+import sys
 import config
 import csv
 import config
@@ -79,16 +79,30 @@ def header_to_csv(header_data):
     # get output directory and output file name from config.ini
     config.read_config()
     if not config.output_dir:
-        with open(config.output_header_csv, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(header_data)
-        print("\nOrder header CSV file " + config.output_header_csv + " created successfully.\n")
-        logger.info("Order header CSV file " + config.output_header_csv + " created successfully.")
+        try:
+            with open(config.output_header_csv, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(header_data)
+            print("\nOrder header CSV file " + config.output_header_csv + " created successfully.\n")
+            logger.info("Order header CSV file " + config.output_header_csv + " created successfully.")
+        except PermissionError:
+            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
+            sys.exit(1)
+        except FileNotFoundError:
+            logger.error("File not found: Ensure the file path is correct.")
+            sys.exit(1)
     else:
-        with open(config.output_dir + "\\" + config.output_header_csv, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(header_data)
-        print("\nOrder header CSV file " + config.output_dir + "\\" + config.output_header_csv + " created successfully.\n")
-        logger.info("Order header CSV file " + config.output_dir + "\\" + config.output_header_csv + " created successfully.")
-    
+        try:
+            with open(config.output_dir + "\\" + config.output_header_csv, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(header_data)
+            print("\nOrder header CSV file " + config.output_dir + "\\" + config.output_header_csv + " created successfully.\n")
+            logger.info("Order header CSV file " + config.output_dir + "\\" + config.output_header_csv + " created successfully.")
+        except PermissionError:
+            #print("Permission denied: Cannot write to the file. Check permissions.")
+            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
+            sys.exit(1)
+        except FileNotFoundError:
+            logger.error("File not found: Ensure the file path is correct.")
+            sys.exit(1)
     
