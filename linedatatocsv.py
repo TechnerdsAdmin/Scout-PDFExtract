@@ -7,8 +7,25 @@ import datavalidation
 import log
 
 def line_data_to_csv(line_data, input_file):
-
+    
+    line_data_list = []
+    all_page_data = ''
+    with pdfplumber.open(input_file) as pdf:
+        for pdf_page in pdf.pages:
+            
+            single_page_data = pdf_page.extract_text(layout=True)
+            
+            # separate each page's text with newline
+            all_page_data = all_page_data + '\n' + single_page_data
+        
+        # Read keyword to identified the table data
+        #config.read_config()
+        # get only header information from all page data
+        index = all_page_data.find(config.keyword_line)
+        if index > 0:
+            line_data = all_page_data[index:]
     # Valdation check using keywords
+    #print(line_data)
     index = line_data.find(config.key_total)
     if index > 0:
         # Data normalization
@@ -16,48 +33,16 @@ def line_data_to_csv(line_data, input_file):
         #print(data_normal)
 
         # write line data to csv
-        linedata_to_csv(data_normal, input_file)
+        line_data_list = linedata_to_csv(data_normal, input_file)
 
-        return True
+        return line_data_list
     else:
-        return False
+        return line_data_list
 
 def linedata_to_csv(data_normal, input_file):
 
-    line_data_header= [
-        ['line_no', 'product_id', 'quantity_ordered', 'unit_of_measure', 'unit_price', 'description', 'extended_price', 'required_date']
-    ]
-
-    logger = log.logging.getLogger(__name__)
-    # get output directory and output file name from config.ini
-    config.read_config()
-    if not config.output_dir:
-        try:
-            with open(config.output_line_csv, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(line_data_header)
-            #print("\nOrder line data CSV file " + config.output_line_csv + " created successfully.\n")
-        except PermissionError:
-            #print("Permission denied: Cannot write to the file. Check permissions.")
-            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
-            sys.exit(1)
-        except FileNotFoundError:
-            logger.error("File not found: Ensure the file path is correct.")
-            sys.exit(1)
-    else:
-        try:
-            with open(config.output_dir + "\\" + config.output_line_csv, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(line_data_header)
-            #print("\nOrder line data CSV file " + config.output_dir + "\\" + config.output_line_csv + " created successfully.\n")
-        except PermissionError:
-            #print("Permission denied: Cannot write to the file. Check permissions.")
-            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
-            sys.exit(1)
-        except FileNotFoundError:
-            logger.error("File not found: Ensure the file path is correct.")
-            sys.exit(1)
-
+    logger = log.logging.getLogger("")
+    
     line_start = 0
     line_no =''
     product_amount=''
@@ -69,13 +54,14 @@ def linedata_to_csv(data_normal, input_file):
     req_date=''
     total_in_po = 0
     line_count_po = 0
+    #line_data_csv = []
     with pdfplumber.open(input_file) as pdf:
         page_count = len(pdf.pages)
         for page in pdf.pages:
             #print(page.page_number)
             words = page.extract_words()
             for word in words:
-                total_word = word["text"]
+                #total_word = word["text"]
                 total_pos = data_normal.find("Total")
                 if total_pos > 0:
                     total_in_po = data_normal[total_pos+6:total_pos+6+15].strip()
@@ -83,6 +69,8 @@ def linedata_to_csv(data_normal, input_file):
                 if page.page_number == 1 and word["top"] > 210:
                     if word["x0"] >= 20 and word["x1"] <= 36:
                         if product_amount != "":
+                            #line_count_po = line_count_po + 1
+                            
                             line_count_po = line_count_po + 1
                             write_linedata_csv(line_no, product_id, product_qty, unit_measure, unit_price, product_desc, product_amount, req_date, 0)
                         #line_list.insert(0,word["text"])
@@ -183,45 +171,35 @@ def linedata_to_csv(data_normal, input_file):
                             line_start = 2
         if product_amount != "":
             line_count_po = line_count_po + 1
-            #print(line_count_po)
             write_linedata_csv(line_no, product_id, product_qty, unit_measure, unit_price, product_desc, product_amount, req_date, 1) 
             # Validation and reconciliation 
             datavalidation.validation_reconciliation(total_in_po, line_count_po)
+            #return line_data_csv
                 
 def write_linedata_csv(line_no, product_id, product_qty, unit_measure, unit_price, product_desc, product_amount, req_date, display):
     
     line_data = [
-        [line_no, product_id, product_qty, unit_measure, unit_price, product_desc, product_amount, req_date]
+        ["", line_no, product_id, product_qty, unit_measure, unit_price, product_desc,"","","","","",req_date, "","","","", product_amount, "","","","","","","","","","","","","","","","","","","","","",""]
     ]
-    logger = log.logging.getLogger(__name__)
+    #print(line_data)
+    logger = log.logging.getLogger("")
     config.read_config()
     if not config.output_dir:
-        try:
-            with open(config.output_line_csv, 'a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(line_data)
-            if display == 1:
-                print("\nOrder line data CSV file " + config.output_line_csv + " created successfully.\n")
-                logger.info("Order line data CSV file " + config.output_line_csv + " created successfully.")
-        except PermissionError:
-            #print("Permission denied: Cannot write to the file. Check permissions.")
-            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
-            sys.exit(1)
-        except FileNotFoundError:
-            logger.error("File not found: Ensure the file path is correct.")
-            sys.exit(1)
+        line_csv_file_path = config.output_line_csv
     else:
-        try:
-            with open(config.output_dir + "\\" + config.output_line_csv, 'a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(line_data)
-            if display == 1:
-                print("\nOrder line data CSV file " + config.output_dir + "\\" + config.output_line_csv + " created successfully.\n")
-                logger.info("Order line data CSV file " + config.output_dir + "\\" + config.output_line_csv + " created successfully.")
-        except PermissionError:
-            #print("Permission denied: Cannot write to the file. Check permissions.")
-            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
-            sys.exit(1)
-        except FileNotFoundError:
-            logger.error("File not found: Ensure the file path is correct.")
-            sys.exit(1)
+        line_csv_file_path = config.output_dir + "\\" + config.output_line_csv
+    try:
+        with open(line_csv_file_path, 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(line_data)
+        # if display == 1:
+        #     print("\nOrder line data CSV file " + line_csv_file_path + " created successfully.\n")
+        #     logger.info("Order line data CSV file " + line_csv_file_path + " created successfully.")
+    except PermissionError:
+        #print("Permission denied: Cannot write to the file. Check permissions.")
+        logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
+        sys.exit(1)
+    except FileNotFoundError:
+        logger.error("File not found: Ensure the file path is correct.")
+        sys.exit(1)
+    

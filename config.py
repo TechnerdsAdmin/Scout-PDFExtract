@@ -20,28 +20,49 @@ def read_config():
         global symbol2_normal
         global key_valid
         global key_total
+        #global header_data_name_csv[9]
+        #global line_data_name_csv[8]
         
-        output_dir = config['DEFAULT']['output_directory']
+        output_dir = config['DEFAULT']['OUTPUT_DIR']
         is_valid(output_dir)
-        log_file_dir = config['DEFAULT']['log_file_path']
+        log_file_dir = config['DEFAULT']['LOG_FILE_PATH']
         is_valid(log_file_dir)
-        output_header_csv = config['DEFAULT']['output_file_header_csv']
-        output_line_csv = config['DEFAULT']['output_file_line_csv']
+        output_header_csv = config['DEFAULT']['OUTPUT_FILE_HEADER_CSV']
+        output_line_csv = config['DEFAULT']['OUTPUT_FILE_LINE_CSV']
 
-        keyword_date = config['HEADER']['keyword1']
-        keyword_line = config['HEADER']['keyword2']
-        keyword_ship = config['HEADER']['keyword3']
-        keyword_terms = config['HEADER']['keyword4']
-        keyword_shipvia = config['HEADER']['keyword5']
+        keyword_date = config['SUKUP_HEADER']['SUKUP_DATE']
+        keyword_line = config['SUKUP_HEADER']['SUKUP_LINE']
+        keyword_ship = config['SUKUP_HEADER']['SUKUP_SHIPTO']
+        keyword_terms = config['SUKUP_HEADER']['SUKUP_TERMS']
+        keyword_shipvia = config['SUKUP_HEADER']['SUKUP_SHIPVIA']
 
-        symbol1_normal = config['NORMALIZATION']['symbol1']
-        symbol2_normal = config['NORMALIZATION']['symbol2']
+        symbol1_normal = config['SUKUP_NORMALIZATION']['SUKUP_CUR']
+        symbol2_normal = config['SUKUP_NORMALIZATION']['SUKUP_DELIMETER']
 
-        key_valid = config['VALIDATION']['key1']
-        key_total = config['VALIDATION']['key2']        
+        key_valid = config['SUKUP_VALIDATION']['SUKUP_PO']
+        key_total = config['SUKUP_VALIDATION']['SUKUP_TOTAL']       
+
+        # header_data_name_csv[0] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H1']
+        # header_data_name_csv[1] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H2']
+        # header_data_name_csv[2] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H3']
+        # header_data_name_csv[3] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H4']
+        # header_data_name_csv[4] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H5']
+        # header_data_name_csv[5] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H6']
+        # header_data_name_csv[6] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H7']
+        # header_data_name_csv[7] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H8']
+        # header_data_name_csv[8] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H9']
+
+        # line_data_name_csv[0] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H1']
+        # line_data_name_csv[1] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H2']
+        # line_data_name_csv[2] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H3']
+        # line_data_name_csv[3] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H4']
+        # line_data_name_csv[4] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H5']
+        # line_data_name_csv[5] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H6']
+        # line_data_name_csv[6] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H7']
+        # line_data_name_csv[7] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H8']
     else:
         # Get a logger instance
-        logger = log.logging.getLogger(__name__)
+        logger = log.logging.getLogger("")
         logger.error("Configuration file(config.ini) does not available.")
         #print("Configuration file(config.ini) does not available.")
 
@@ -54,7 +75,7 @@ def is_valid(folder_name):
             os.mkdir(folder_name)
         else:
             import log
-            logger = log.logging.getLogger(__name__)
+            logger = log.logging.getLogger("")
             logger.error("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
             #print("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
             return False
