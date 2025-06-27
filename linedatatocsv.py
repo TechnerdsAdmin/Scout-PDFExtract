@@ -41,7 +41,7 @@ def line_data_to_csv(line_data, input_file):
 
 def linedata_to_csv(data_normal, input_file):
 
-    logger = log.logging.getLogger("")
+    logger = log.logging.getLogger()
     
     line_start = 0
     line_no =''
@@ -103,6 +103,7 @@ def linedata_to_csv(data_normal, input_file):
                         #print(word["text"])
                     if word["x0"] >= 400 and word["x1"] < 455:
                         req_date = word["text"]
+                        req_date = " " + req_date + " "
                         #line_list.insert(5,word["text"])
                         #print(word["text"])
                     if word["x0"] >= 480 and word["x1"] < 530:
@@ -154,6 +155,7 @@ def linedata_to_csv(data_normal, input_file):
                             #print(word["text"])
                         if word["x0"] >= 400 and word["x1"] < 455:
                             req_date = word["text"]
+                            req_date = " " + req_date + " "
                             #line_list.insert(5,word["text"])
                             #print(word["text"])
                         if word["x0"] >= 480 and word["x1"] < 530:
@@ -182,8 +184,8 @@ def write_linedata_csv(line_no, product_id, product_qty, unit_measure, unit_pric
         ["", line_no, product_id, product_qty, unit_measure, unit_price, product_desc,"","","","","",req_date, "","","","", product_amount, "","","","","","","","","","","","","","","","","","","","","",""]
     ]
     #print(line_data)
-    logger = log.logging.getLogger("")
-    config.read_config()
+    logger = log.logging.getLogger()
+    #config.read_config()
     if not config.output_dir:
         line_csv_file_path = config.output_line_csv
     else:

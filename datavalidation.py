@@ -3,14 +3,15 @@ import config
 import log
 import sys
 import shutil
+import pandas as pd
 
 def validation_reconciliation(total_po, line_count_po):
-    logger = log.logging.getLogger("")
-    config.read_config()
+    logger = log.logging.getLogger()
+    #config.read_config()
     file_path = ''
     if not config.output_dir:
-        file_path = config.output_header_csv 
-        with open(config.output_header_csv) as file:
+        file_path = config.output_line_csv 
+        with open(config.output_line_csv) as file:
             reader  = csv.reader(file)
             row_count = sum(1 for row in reader)  
             #print(row_count - 1)
@@ -25,7 +26,7 @@ def validation_reconciliation(total_po, line_count_po):
     total_csv = calculate_column_sum_csv(file_path, 17)
     #print(total_po)
     #print(total_csv)
-    config.read_config()
+    #config.read_config()
     if not config.output_dir:
         header_csv_file_path = config.output_header_csv
         line_csv_file_path = config.output_line_csv
@@ -41,7 +42,7 @@ def validation_reconciliation(total_po, line_count_po):
         print("\nOrder line data CSV file " + line_csv_file_path + " created successfully.\n")
         logger.info("Order line data CSV file " + line_csv_file_path + " created successfully.")
     else:
-        logger.info("Validation and Reconciliation are Failed")
+        logger.error("Validation and Reconciliation are Failed")
         print("Validation and Reconciliation are Failed\n")
         shutil.copy("Templates//orderquoteheader.csv", header_csv_file_path)
         shutil.copy("Templates//orderquoteline.csv", line_csv_file_path)
@@ -49,18 +50,20 @@ def validation_reconciliation(total_po, line_count_po):
 
 def calculate_column_sum_csv(file_path, column_index):
     
-    logger = log.logging.getLogger("")
+    logger = log.logging.getLogger()
     total_sum = 0
     with open(file_path, 'r', newline='') as file:
         reader = csv.reader(file)
         header = next(reader)  # Skip the header row
         for row in reader:
             try:
+                
                 # Convert the column value to a number (float or int)
                 value = float(row[column_index]) 
                 total_sum += value
+                
             except (ValueError, IndexError):
                 # Handle cases where conversion fails or column index is out of bounds
-                logger.warning("Error during convert column values to float")
+                logger.error("Error during convert column values to float")
                 continue 
     return total_sum

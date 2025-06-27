@@ -28,11 +28,18 @@ if os.path.exists(input_file):
     else:
         # move both csv files to output folder from template folder
         try:
-            config.read_config()
-            shutil.copy("Templates//orderquoteheader.csv", config.output_dir + "//" + config.output_header_csv)
-            logger.error("Oreder header csv file copied to output folder successfully")
-            shutil.copy("Templates//orderquoteline.csv", config.output_dir + "//" + config.output_line_csv)
-            logger.error("Oreder line csv file copied to output folder successfully")
+            #config.read_config()
+            if not config.output_dir:
+                header_csv_file_path = config.output_header_csv
+                line_csv_file_path = config.output_line_csv
+            else:
+                header_csv_file_path = config.output_dir + "\\" + config.output_header_csv
+                line_csv_file_path = config.output_dir + "\\" + config.output_line_csv
+            
+            shutil.copy("Templates//orderquoteheader.csv", header_csv_file_path)
+            logger.info("Order header csv file copied to output folder successfully")
+            shutil.copy("Templates//orderquoteline.csv", line_csv_file_path)
+            logger.info("Order line csv file copied to output folder successfully")
         except FileNotFoundError:
             logger.error("Source file not found.")
         except Exception as e:
@@ -44,15 +51,13 @@ else:
  
 # data extraction 
 extract_data = dataextraction.data_extraction(input_file)
-#print(extract_data)
+
 # Get header data
 header_list = headerdatatocsv.header_data_to_csv(extract_data)
 #print(header_list)
 if header_list:
-    
-    # # Get Line data
+    # # Process the Line data
     linedatatocsv.line_data_to_csv(header_list, input_file)
-    
 else:
     logger.error("PO Number not found, Input file consider as a not a valid file")
     

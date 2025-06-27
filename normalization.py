@@ -5,7 +5,7 @@ import config
 def data_normalization(line_data):
 
     # Read normalization symbols from config file
-    config.read_config()
+    #config.read_config()
     # Remove currency symbols '$' and ',' in line datas
     replace = False
     data_normal = ''

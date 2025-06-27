@@ -41,28 +41,9 @@ def read_config():
 
         key_valid = config['SUKUP_VALIDATION']['SUKUP_PO']
         key_total = config['SUKUP_VALIDATION']['SUKUP_TOTAL']       
-
-        # header_data_name_csv[0] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H1']
-        # header_data_name_csv[1] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H2']
-        # header_data_name_csv[2] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H3']
-        # header_data_name_csv[3] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H4']
-        # header_data_name_csv[4] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H5']
-        # header_data_name_csv[5] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H6']
-        # header_data_name_csv[6] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H7']
-        # header_data_name_csv[7] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H8']
-        # header_data_name_csv[8] = config['SUKUP_HEADER_NAMES_CSV']['SUKUP_H9']
-
-        # line_data_name_csv[0] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H1']
-        # line_data_name_csv[1] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H2']
-        # line_data_name_csv[2] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H3']
-        # line_data_name_csv[3] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H4']
-        # line_data_name_csv[4] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H5']
-        # line_data_name_csv[5] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H6']
-        # line_data_name_csv[6] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H7']
-        # line_data_name_csv[7] = config['SUKUP_LINE_NAMES_CSV']['SUKUP_H8']
     else:
         # Get a logger instance
-        logger = log.logging.getLogger("")
+        logger = log.logging.getLogger()
         logger.error("Configuration file(config.ini) does not available.")
         #print("Configuration file(config.ini) does not available.")
 
@@ -75,7 +56,7 @@ def is_valid(folder_name):
             os.mkdir(folder_name)
         else:
             import log
-            logger = log.logging.getLogger("")
+            logger = log.logging.getLogger()
             logger.error("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
             #print("Output/Log directory " + folder_name +  " not available in config file, So output file/log file stored in applicaion path")
             return False

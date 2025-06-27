@@ -1,20 +1,20 @@
 import sys
 import config
 import csv
-import config
 import log
 
 def header_data_to_csv(header_data):
     
-    logger = log.logging.getLogger("")
+    logger = log.logging.getLogger()
     lines = header_data.split('\n')
     header_data_csv = []
     #print(lines[4])
-    if len(lines[4]) > 0:
+    if len(lines[4].strip()) > 0:
         # Read keyword to identified the date
-        config.read_config()
+        #config.read_config()
         
         po_num = lines[4].strip()
+        
         header_data_csv.insert(0,po_num)
         index = header_data.find(config.keyword_date)
         #print(index)
@@ -34,9 +34,22 @@ def header_data_to_csv(header_data):
             cityZip = address.split(",")
             header_data_csv.insert(4,cityZip)
             # Get state
-            state = cityZip[1].strip().split(" ")
-            header_data_csv.insert(5,state[0].strip())
-            header_data_csv.insert(6,state[1].strip())
+            city = ''
+            state = ''
+            zipCode = ''
+            if len(cityZip) > 0:
+                city = cityZip[0].strip()
+                states = cityZip[1].strip().split(" ")
+                state = states[0].strip()
+                zipCode = states[1].strip()
+                header_data_csv.insert(5,state)
+                header_data_csv.insert(6,zipCode)
+            else:
+                city = ""
+                state = ""
+                zipCode =""
+                header_data_csv.insert(5,"")
+                header_data_csv.insert(6,"")
             # Get terms and Ship Via
             index = header_data.find(config.keyword_terms)
             if index > 0:
@@ -52,7 +65,7 @@ def header_data_to_csv(header_data):
                 shipVia = ''
                 
             header_data = [
-                ["","","","","",po_num, "", "","", "", order_date, "","","","", shipAddress.strip(), addressOne.strip(), "", cityZip[0].strip(), state[0].strip(), state[1].strip(), "","","","","","","", terms.strip(), "","","","","","","","","","","","","","","","",'',"","","","","","","","","","","","","","","","",'',shipVia.strip(), "","","","","","","","","","",""]
+                ["","","","","",po_num, "", "","", "", order_date, "","","","", shipAddress.strip(), addressOne.strip(), "", city, state, zipCode, "","","","","","","", terms.strip(), "","","","","","","","","","","","","","","","",'',"","","","","","","","","","","","","","","","",'',shipVia.strip(), "","","","","","","","","","",""]
             ]
                 #['customer_po_no', 'order_date', 'ship_to_name', 'ship_to_address_1', 'ship_to_city', 'ship_to_state', 'ship_to_zip', 'terms', 'ship_via'],
                 #["","","","","",po_num, "", "","", "", order_date, "","","","", shipAddress.strip(), addressOne.strip(), "", cityZip[0].strip(), state[0].strip(), state[1].strip(), "","","","","","","", terms.strip(), "","","","","","","","","","","","","","","","",'',"","","","","","","","","","","","","","","","",'',shipVia.strip(), "","","","","","","","","","",""]
@@ -85,9 +98,9 @@ def get_To_Address(fromToAddress):
 
 def header_to_csv(header_data):
     #print(header_data)
-    logger = log.logging.getLogger("")
+    logger = log.logging.getLogger()
     # get output directory and output file name from config.ini
-    config.read_config()
+    #config.read_config()
     if not config.output_dir:
         header_csv_file_path = config.output_header_csv
     else:

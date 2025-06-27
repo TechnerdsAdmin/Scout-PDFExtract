@@ -8,7 +8,7 @@ import sys
 
 def data_extraction(input_file):
 
-   logger = log.logging.getLogger("")
+   logger = log.logging.getLogger()
    
    with pdfplumber.open(input_file) as pdf:
        # Read pdf data
@@ -21,7 +21,7 @@ def data_extraction(input_file):
           all_page_data = all_page_data + '\n' + single_page_data
        
        # Read keyword to identified the table data
-       config.read_config()
+       #config.read_config()
        # get only header information from all page data
        index = all_page_data.find(config.keyword_line)
        if index > 0:
@@ -36,8 +36,8 @@ def data_extraction(input_file):
          #        logger.error("Total/PO keyword not found so halt the application")
          #        #print("Input file is not a valid file")
        else:
-          logger.error("Total/PO keyword not found so halt the application")
-          sys.exot(0)
+          logger.error("Application terminated due to Total or Purchase order not found.")
+          sys.exit(0)
           #print("Input file is not a valid file")
          
 
