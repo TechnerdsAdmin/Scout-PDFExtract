@@ -4,9 +4,7 @@ import config
 
 def data_normalization(line_data):
 
-    # Read normalization symbols from config file
-    #config.read_config()
-    # Remove currency symbols '$' and ',' in line datas
+    # Read normalization symbols from config file and remove it for product amount and unit price
     replace = False
     data_normal = ''
     for char in line_data:
@@ -23,5 +21,3 @@ def data_normalization(line_data):
                     replace = False
             data_normal = data_normal + char
     return data_normal
-
-
