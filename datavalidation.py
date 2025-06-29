@@ -1,6 +1,7 @@
 import csv
 import config
 import log
+import os
 import sys
 import shutil
 import pandas as pd
@@ -45,32 +46,36 @@ def validation_reconciliation(total_po, line_count_po):
             print("Validation and Reconciliation are Failed\n")
             shutil.copy("Templates//orderquoteheader.csv", header_csv_file_path)
             shutil.copy("Templates//orderquoteline.csv", line_csv_file_path)
-            sys.exit(1)
+            #sys.exit(1)
     except:
-        logger.error("An error occured in validation method.")
+        logger.error("An error occured in validation_reconciliation method.")
         sys.exit(1)
 
 # Calculate product amount column sum
 def calculate_column_sum_csv(file_path, column_index):
     
+    total_sum = 0
     logger = log.logging.getLogger()
-    try:
-        total_sum = 0
-        with open(file_path, 'r', newline='') as file:
-            reader = csv.reader(file)
-            header = next(reader)  # Skip the header row
-            for row in reader:
-                try:
-                    
-                    # Convert the column value to a number (float or int)
-                    value = float(row[column_index]) 
-                    total_sum += value
-                    
-                except (ValueError, IndexError):
-                    # Handle cases where conversion fails or column index is out of bounds
-                    logger.error("Error during convert column values to float")
-                    continue 
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, 'r', newline='') as file:
+                reader = csv.reader(file)
+                header = next(reader)  # Skip the header row
+                for row in reader:
+                    try:
+                        
+                        # Convert the column value to a number (float or int)
+                        value = float(row[column_index]) 
+                        total_sum += value
+                        
+                    except (ValueError, IndexError):
+                        # Handle cases where conversion fails or column index is out of bounds
+                        logger.error("Error during convert column values to float")
+                        continue 
+            return total_sum
+        except:
+            logger.error("An error occured in calculate_column_sum_csv method.")
+            sys.exit(1)
+    else:
+        logger.error("reconciliation file does not exist")
         return total_sum
-    except:
-        logger.error("An error occured in calculate_column_sum_csv method.")
-        sys.exit(1)

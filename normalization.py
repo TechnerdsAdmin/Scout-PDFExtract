@@ -5,16 +5,17 @@ import config
 def data_normalization(line_data):
 
     # Read normalization symbols from config file and remove it for product amount and unit price
+    #config.read_config()
     replace = False
     data_normal = ''
     for char in line_data:
-        if char == config.symbol1_normal:
+        if char == "$":
             replace = True
             char = ""
             data_normal = data_normal + char
         else:
             if replace == True:
-                if char == config.symbol2_normal:
+                if char == ",":
                     char = ""
                     replace = False
                 if char == "\n":

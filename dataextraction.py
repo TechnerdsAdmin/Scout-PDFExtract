@@ -28,7 +28,7 @@ def data_extraction(input_file):
          else:
             # Exit the application if input firl does not have Total and PO
             logger.error("Application terminated due to Total or Purchase order not found.")
-            sys.exit(1)
+            #sys.exit(1)
    except:
       logger.error("An error occured in data_extraction method.")
       sys.exit(1)

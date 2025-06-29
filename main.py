@@ -40,6 +40,9 @@ if os.path.exists(input_file):
             logger.info("Order header csv file copied to output folder successfully")
             shutil.copy("Templates//orderquoteline.csv", line_csv_file_path)
             logger.info("Order line csv file copied to output folder successfully")
+        except PermissionError:
+            logger.error("Permission denied: Cannot write to the file due to file is already open. Close the file and try again")
+            sys.exit(1)
         except FileNotFoundError:
             logger.error("Source file not found.")
             sys.exit(1)
@@ -48,7 +51,7 @@ if os.path.exists(input_file):
             sys.exit(1)
 else:
     logger.error("Input file does not exist")
-    sys.exit(1)
+    #sys.exit(1)
 
 # Split header data and line data 
 extract_data = dataextraction.data_extraction(input_file)

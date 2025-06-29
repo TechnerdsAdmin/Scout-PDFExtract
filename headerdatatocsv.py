@@ -22,6 +22,16 @@ def header_data_to_csv(header_data):
             
             if index > 0:
                 order_date = header_data[index+6:index+6+10]
+                order_date = order_date.split("/")
+                if len(order_date[0]) == 1:
+                    order_date[0] = " 0" + order_date[0]
+                else:
+                    order_date[0] = " " + order_date[0]
+                if len(order_date[1]) == 1:
+                    order_date[1] = "0" + order_date[1]
+                else:
+                    order_date[1] = order_date[1]
+                order_date = order_date[0] + "/" + order_date[1] + "/" + order_date[2]
                 header_data_csv.insert(1,order_date)
             
             # Get Ship address information using keyword

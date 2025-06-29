@@ -60,7 +60,7 @@ def linedata_to_csv(data_normal, input_file):
         line_count_po = 0
         
         with pdfplumber.open(input_file) as pdf:
-            page_count = len(pdf.pages)
+            
             # Read page by page
             for page in pdf.pages:
                 # Read word by word
@@ -99,18 +99,18 @@ def linedata_to_csv(data_normal, input_file):
                             else:
                                 req_date[0] = " " + req_date[0]
                             if len(req_date[1]) == 1:
-                                req_date[1] = " 0" + req_date[1]
+                                req_date[1] = "0" + req_date[1]
                             else:
-                                req_date[1] = " " + req_date[1]
+                                req_date[1] = req_date[1]
                             req_date = req_date[0] + "/" + req_date[1] + "/" + req_date[2]
                         if word["x0"] >= 480 and word["x1"] < 530:
                             unit_price = word["text"]
-                            unit_price = unit_price.replace("$","")
-                            unit_price = unit_price.replace(",","")
+                            unit_price = unit_price.replace(config.symbol1_normal,"")
+                            unit_price = unit_price.replace(config.symbol2_normal,"")
                         if word["x0"] >= 550 and word["x1"] < 605:
                             product_amount = word["text"]
-                            product_amount = product_amount.replace("$","")
-                            product_amount = product_amount.replace(",","")
+                            product_amount = product_amount.replace(config.symbol1_normal,"")
+                            product_amount = product_amount.replace(config.symbol2_normal,"")
                             line_start = 2
                     else:
                         # Process rest of the first page
@@ -143,18 +143,18 @@ def linedata_to_csv(data_normal, input_file):
                                 else:
                                     req_date[0] = " " + req_date[0]
                                 if len(req_date[1]) == 1:
-                                    req_date[1] = " 0" + req_date[1]
+                                    req_date[1] = "0" + req_date[1]
                                 else:
-                                    req_date[1] = " " + req_date[1]
+                                    req_date[1] = req_date[1]
                                 req_date = req_date[0] + "/" + req_date[1] + "/" + req_date[2]
                             if word["x0"] >= 480 and word["x1"] < 530:
                                 unit_price = word["text"]
-                                unit_price = unit_price.replace("$","")
-                                unit_price = unit_price.replace(",","")
+                                unit_price = unit_price.replace(config.symbol1_normal,"")
+                                unit_price = unit_price.replace(config.symbol2_normal,"")
                             if word["x0"] >= 550 and word["x1"] < 605:
                                 product_amount = word["text"]
-                                product_amount = product_amount.replace("$","")
-                                product_amount = product_amount.replace(",","")
+                                product_amount = product_amount.replace(config.symbol1_normal,"")
+                                product_amount = product_amount.replace(config.symbol2_normal,"")
                                 line_start = 2
             if product_amount != "":
                 line_count_po = line_count_po + 1
